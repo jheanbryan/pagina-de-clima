@@ -2,10 +2,16 @@
     padding: 0;
     margin: 0;
     box-sizing: border-box;
+    color: white;
+    font-family: roboto;
 }
-
+@font-face {
+    font-family: roboto;
+    src: url(RobotoCondensed-Regular.ttf);
+}
 :root{
     --bg-color: #6D67D0;
+    --primary-color: white;
 }
 body{
     width: 100%;
@@ -39,19 +45,50 @@ main{
 .city{
     margin-left: auto;
     margin-top: 20px;
+    display: flex;
 }
 .temperature{
     margin-inline: auto;
-    margin-top: 100px;
+    margin-top: 50px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.temperature-now{
+    display: flex;
+}
+.temperature-now h1{
+    font-weight: bold;
+    font-size: 88px;
+}
+.temperature-now span{
+    margin-top: 10px;
+}
+.min-max-temp-now{
+    font-size: 20px;
+}
+.min-max-temp-now span:last-child{
+    color: gainsboro;
 }
 .container-statistics{
     margin-top: auto;
     display: flex;
     justify-content: space-around;
+    gap: 8px;
 }
 .statistics{
     display: flex;
     gap: 5px;
+    align-items: center;
+    background-color: rgba(109, 103, 208, 0.6);
+    padding: 15px;
+    border-radius: 5px;
+    flex: 1;
+    justify-content: space-evenly;
+}
+.statistics img{
+    width: 27px;
+    height: 24px;
 }
 
 
@@ -70,15 +107,33 @@ main{
     display: flex;
     width: 100%;
     gap: 15px;
+
 }
 .two-columns-info div{
     background-color: var(--bg-color);
     width: 100%;
-    height: 247px;
+    min-height: 247px;;
+    padding: 10px;
+}
+.two-columns-info div span{
+    display: flex;
 }
 
 .temperature-week{
     background-color: var(--bg-color);
     width: 100%;
     height: 100%;
+    display: flex;
+    justify-content: space-between;
+    padding: 15px;
+    align-items: center;
+}
+.day-week{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.day-week img{
+    width: 64px;
+    text-align: center;
 }
