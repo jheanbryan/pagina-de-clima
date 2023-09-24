@@ -12,6 +12,8 @@
 :root{
     --bg-color: #6D67D0;
     --primary-color: white;
+    --secondary-color: gainsboro;
+    --tertiary-color: #87EBCD;
 }
 body{
     width: 100%;
@@ -68,7 +70,7 @@ main{
     font-size: 20px;
 }
 .min-max-temp-now span:last-child{
-    color: gainsboro;
+    color: var(--secondary-color);
 }
 .container-statistics{
     margin-top: auto;
@@ -89,6 +91,12 @@ main{
 .statistics img{
     width: 27px;
     height: 24px;
+}
+.statistics div span{
+    color: var(--secondary-color);
+}
+.statistics div h3{
+    font-weight: lighter;
 }
 
 
@@ -114,9 +122,16 @@ main{
     width: 100%;
     min-height: 247px;;
     padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
 }
 .two-columns-info div span{
     display: flex;
+    margin-top: 15px;
+}
+.two-columns-info > div div  span{
+    color: var(--tertiary-color);
 }
 
 .temperature-week{
@@ -136,4 +151,7 @@ main{
 .day-week img{
     width: 64px;
     text-align: center;
+}
+.min-max-temp-week span:last-child{
+    color: var(--secondary-color);
 }
