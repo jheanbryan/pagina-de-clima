@@ -8,18 +8,19 @@
 <body>
     <main>
         <section class="container-temperature-now">
-            <span class="city">
-                <img src="assets/pin.png" alt="" > Aquidauana, MS
-            </span>
+            <div class="city">
+                <img src="assets/pin.png" alt="" >
+                <span id="city">Aquidauna, MS</span>
+            </div>
 
             <div class="temperature">
                 <div class="temperature-now">
-                    <h1>18</h1>
+                    <h1 id="temperature-now">18</h1>
                     <span>°C</span>
                 </div>
                 <div class="min-max-temp-now">
-                    <span>22°</span>
-                    <span>16°</span>
+                    <span id="min-temp">22°</span>
+                    <span id="max-temp">16°</span>
                 </div>
             </div>
 
@@ -116,5 +117,6 @@
             </div>
         </section>  
     </main>
+    <script src="app.js"></script>
 </body>
 </html>
