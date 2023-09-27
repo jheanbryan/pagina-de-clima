@@ -11,7 +11,7 @@ const hour = date.getHours()
 //obter a latitude e longitude da cidade
 async function getLatLon(){
     try {
-        const response = await fetch(`http://api.openweathermap.org/geo/1.0/direct?q=${city_name}&limit=5&appid=${API_KEY}`);
+        const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city_name}&limit=5&appid=${API_KEY}`);
         const data = await response.json()
         lat = data[0].lat;
         lon = data[0].lon;
