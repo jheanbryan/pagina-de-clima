@@ -8,7 +8,8 @@
 <body>
     <main>
         <section class="container-temperature-now">
-            <div class="city">
+            <img src="assets/weather.png" alt="" class="img-weather">
+            <div class="city" >
                 <img src="assets/pin.png" alt="" >
                 <span id="city">Aquidauna, MS</span>
             </div>
@@ -29,7 +30,7 @@
                     <img src="assets/wind.png" alt="">
                     <div>
                         <span>Vento</span>
-                        <h3>17 km/h</h3>
+                        <h3 id="wind-speed">17 km/h</h3>
                     </div>
                 </div>
 
@@ -37,7 +38,7 @@
                     <img src="assets/humidity.png" alt="">
                     <div>
                         <span>Umidade</span>
-                        <h3>31%</h3>
+                        <h3 id="humidity">31%</h3>
                     </div>
                 </div>
 
@@ -45,7 +46,7 @@
                     <img src="assets/rain.png" alt="">
                     <div>
                         <span>Chuva</span>
-                        <h3>10%</h3>
+                        <h3 id="rain">10%</h3>
                     </div>
                 </div>
 
@@ -55,17 +56,50 @@
 
         <section class="others-info">
             <div class="two-columns-info">
-                <div>
-                    <span><img src="assets/leaf.png" alt="">Qualidade do ar</span>
+                <div class="col1">
+                    <span  class="row"><img src="assets/leaf.png" alt="">Qualidade do ar</span>
 
-                    <div>
-                        <span>Boa</span>
-                        <h1>21</h1>
+                    <div class="air-quality-container">
+                        <h1 id="air-quality-status">Boa</h1>
+
+                        <div class="container-air-elements">
+                            <div class="air-element">
+                                <span class="element-ind" id="particulate-matter2-qtd">0</span>
+                                <span class="element-name">PM2.5</span>
+                            </div>
+
+                            <div class="air-element">
+                                <span class="element-ind" id="particulate-matter10-qtd">0</span>
+                                <span class="element-name">PM10</span>
+                            </div>
+
+                            <div class="air-element">
+                                <span class="element-ind" id="sulphur-dioxide">0</span>
+                                <span class="element-name">SO₂</span>
+                            </div>
+
+                            <div class="air-element">
+                                <span class="element-ind" id="nitrogen-dioxide">0</span>
+                                <span class="element-name">NO₂</span>
+                            </div>
+
+                            <div class="air-element">
+                                <span class="element-ind" id="ozone">0</span>
+                                <span class="element-name">O₃</span>
+                            </div>
+
+                            <div class="air-element">
+                                <span class="element-ind" id="carbon-monoxide">0</span>
+                                <span class="element-name">CO</span>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
-                <div>
-                    <span><img src="assets/sun.png" alt="">Horário de Sol</span>
+                <div  class="col2">
+                    <span class="row"><img src="assets/sun.png" alt="">Índice de UV</span>
+                    <h1 id="uv-index"></h1>
+                    <span id="classification_uv" class="tertiary-color">normal</span>
                 </div>
             </div>
 
@@ -74,8 +108,8 @@
                     <span>Amanhã</span>
                     <img src="assets/week/weather-week.png" alt="">
                     <div class="min-max-temp-week">
-                        <span>27°</span>
-                        <span>16°</span>
+                        <span id="max-temp-day1">27°</span>
+                        <span id="min-temp-day1">16°</span>
                     </div>
                 </div>
 
@@ -83,8 +117,8 @@
                     <span>Amanhã</span>
                     <img src="assets/week/sun-week.png" alt="">
                     <div class="min-max-temp-week">
-                        <span>27°</span>
-                        <span>16°</span>
+                        <span id="max-temp-day2">27°</span>
+                        <span  id="min-temp-day2">16°</span>
                     </div>
                 </div>
 
@@ -92,8 +126,8 @@
                     <span>Amanhã</span>
                     <img src="assets/week/rain-week.png" alt="">
                     <div class="min-max-temp-week">
-                        <span>27°</span>
-                        <span>16°</span>
+                        <span  id="max-temp-day3">27°</span>
+                        <span  id="min-temp-day3">16°</span>
                     </div>
                 </div>
 
@@ -101,8 +135,8 @@
                     <span>Amanhã</span>
                     <img src="assets/week/thunderstorm-week.png" alt="">
                     <div class="min-max-temp-week">
-                        <span>27°</span>
-                        <span>16°</span>
+                        <span  id="max-temp-day4">27°</span>
+                        <span  id="min-temp-day4">16°</span>
                     </div>
                 </div>
 
@@ -110,8 +144,8 @@
                     <span>Amanhã</span>
                     <img src="assets/week/sunWeather-week.png" alt="">
                     <div class="min-max-temp-week">
-                        <span>27°</span>
-                        <span>16°</span>
+                        <span  id="max-temp-day5">27°</span>
+                        <span  id="min-temp-day5">16°</span>
                     </div>
                 </div>
             </div>
