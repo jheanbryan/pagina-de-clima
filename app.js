@@ -1,7 +1,7 @@
 // https://open-meteo.com
 
 let API_KEY = "d63dfeee72b3e0fadcc8823978a770cd";
-let city_name = 'aquidauana';
+let city_name = 'campo grande';
 
 let lat, lon, weather, weatherForecast, airQuality, data_hora, classification_uv;
 
@@ -30,7 +30,6 @@ async function getWeatherForecast(lat, lon){
         const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=relativehumidity_2m,rain,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto`, { timeout: 20000 });
         const data = await response.json()
         weatherForecast = data;
-        console.log(weatherForecast);
         return {weatherForecast: weatherForecast};
 
     } catch (error) {
@@ -76,7 +75,6 @@ function obterDiaDaSemana(dataString){
     const diaSemana = data.getDay();
   
     dayWeek = diasDaSemana[diaSemana];
-    console.log(dayWeek)
     return dayWeek;
   }
 
@@ -145,9 +143,7 @@ async function writeInfoInHtml(){
 
     let day, dayWeek;
     for (let i = 0; i < 5; i++) {
-        console.log('\n Vou no elemento ' + i);
         day = weatherForecast.daily.time[i];
-        console.log(day);
         const dayWeek = obterDiaDaSemana(day); 
         const spanElement = week[i].querySelector('span');
         spanElement.innerHTML = dayWeek;
