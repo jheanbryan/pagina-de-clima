@@ -1,8 +1,18 @@
-const btnSearch = document.getElementById('search');
-const cityName = document.getElementById('input-city-name').value;
-const estado = 'mato grosso do sul';
+const inputEstados = document.getElementById('input-estados')
+const inputCidades = document.getElementById('input-cidades')
+const content = document.querySelector('.content');
 
+let estados = ['MS', 'MT', 'RS', 'DF'];
 
+function addHtml(item){
+    const div = document.createElement('div');
+    div.innerHTML = item;
+    content.append(div)
+}
+
+addHtml(estados);
+
+/*
 btnSearch.addEventListener('click', function(){
     console.log(cityName)
 })
@@ -15,7 +25,7 @@ document.body.addEventListener('keypress', function (event) {
 
         function ler(){
             console.log('to no ler')
-            const { lista } = await searchCity(cityName);
+            const { lista } = searchCity(cityName);
             console.log(lista);
             verificarEstado(estado, lista);
         }
@@ -59,3 +69,4 @@ function split(name){
     console.log(nameEsplitado)
 
 }
+*/
