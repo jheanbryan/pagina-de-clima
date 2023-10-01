@@ -1,18 +1,91 @@
 const inputEstados = document.getElementById('input-estados')
 const inputCidades = document.getElementById('input-cidades')
 const content = document.querySelector('.content');
+let divEstado;
 
-let estados = ['MS', 'MT', 'RS', 'DF'];
+let estados = [
+    {"nome": "Acre", "sigla": "AC"},
+    {"nome": "Alagoas", "sigla": "AL"},
+    {"nome": "Amapá", "sigla": "AP"},
+    {"nome": "Amazonas", "sigla": "AM"},
+    {"nome": "Bahia", "sigla": "BA"},
+    {"nome": "Ceará", "sigla": "CE"},
+    {"nome": "Distrito Federal", "sigla": "DF"},
+    {"nome": "Espírito Santo", "sigla": "ES"},
+    {"nome": "Goiás", "sigla": "GO"},
+    {"nome": "Maranhão", "sigla": "MA"},
+    {"nome": "Mato Grosso", "sigla": "MT"},
+    {"nome": "Mato Grosso do Sul", "sigla": "MS"},
+    {"nome": "Minas Gerais", "sigla": "MG"},
+    {"nome": "Pará", "sigla": "PA"},
+    {"nome": "Paraíba", "sigla": "PB"},
+    {"nome": "Paraná", "sigla": "PR"},
+    {"nome": "Pernambuco", "sigla": "PE"},
+    {"nome": "Piauí", "sigla": "PI"},
+    {"nome": "Rio de Janeiro", "sigla": "RJ"},
+    {"nome": "Rio Grande do Norte", "sigla": "RN"},
+    {"nome": "Rio Grande do Sul", "sigla": "RS"},
+    {"nome": "Rondônia", "sigla": "RO"},
+    {"nome": "Roraima", "sigla": "RR"},
+    {"nome": "Santa Catarina", "sigla": "SC"},
+    {"nome": "São Paulo", "sigla": "SP"},
+    {"nome": "Sergipe", "sigla": "SE"},
+    {"nome": "Tocantins", "sigla": "TO"}
+
+];
+
+let estado;
+for (let i = 0; i < estados.length; i++) {
+    estado = estados[i].nome;
+    //console.log(estado);
+    addHtml(estado);
+}
+
+inputEstados.addEventListener('focus', function(){
+    content.style.display = 'flex';
+})
+inputEstados.addEventListener('blur', function(){
+    content.style.display = 'none';
+})
 
 function addHtml(item){
     const div = document.createElement('div');
     div.innerHTML = item;
-    content.append(div)
+    content.append(div);
+    div.classList.add('div');
+    divEstado = document.getElementsByClassName('div');
+    
 }
 
-addHtml(estados);
+inputEstados.addEventListener('input', function() {
+    const filtro = inputEstados.value.toLowerCase();
+    
+    content.innerHTML = ""; // Limpa o conteúdo anterior
+    
+    estados
+        .filter((estado) => estado.nome.toLowerCase().includes(filtro))
+        .forEach((estado) => addHtml(estado.nome));
+});
+
 
 /*
+async function searchCity(cityName){
+    try {
+        const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${cityName}&count=10&language=pt&format=json`, { timeout: 20000 });
+        const data = await response.json()
+        lista = data.results;
+        console.log(lista)
+        return {lista: lista};
+
+    } catch (error) {
+        console.error("Ocorreu um erro:", error);
+        console.error("Erro:", error.response);
+    }
+
+}
+
+
+
 btnSearch.addEventListener('click', function(){
     console.log(cityName)
 })
