@@ -7,7 +7,7 @@ const contentCidades = document.querySelector('.content-cidades');
 let divEstado, dataJson, cidadesDisponiveis;
 carregarJsonEstadosCidades();
 
-let cidadeParaBuscar = 'campo grande';
+let cidadeParaBuscar = 'aquidauana';
 let uf = 'MS'
 let estados = [
     {"nome": "Acre", "sigla": "AC"},
