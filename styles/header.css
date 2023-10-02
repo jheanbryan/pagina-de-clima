@@ -11,6 +11,7 @@ input{
     color: black;
     width: 150px;
     height: 20px;
+    z-index: 100;
 
 }
 
@@ -29,6 +30,24 @@ input{
     padding: 5px;
 }
 .content > div:hover{
+    background-color: white;
+    color: #6D67D0;
+}
+
+.content-cidades{
+    flex-direction: column;
+    position: absolute;
+    z-index: 100;
+    width: 150px;
+    overflow-y: auto;
+    max-height: 300px;
+}
+.content-cidades > div{
+    background-color: #6D67D0;
+    cursor: pointer;
+    padding: 5px;
+}
+.content-cidades > div:hover{
     background-color: white;
     color: #6D67D0;
 }

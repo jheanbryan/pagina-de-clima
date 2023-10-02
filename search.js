@@ -1,7 +1,9 @@
 const inputEstados = document.getElementById('input-estados')
 const inputCidades = document.getElementById('input-cidades')
 const content = document.querySelector('.content');
-let divEstado;
+const contentCidades = document.querySelector('.content-cidades');
+let divEstado, dataJson, cidadesDisponiveis;
+carregarJsonEstadosCidades();
 
 let estados = [
     {"nome": "Acre", "sigla": "AC"},
@@ -33,41 +35,92 @@ let estados = [
     {"nome": "Tocantins", "sigla": "TO"}
 
 ];
-
-let estado;
+let estado, cidade;
 for (let i = 0; i < estados.length; i++) {
     estado = estados[i].nome;
     //console.log(estado);
-    addHtml(estado);
+    addHtml(estado, content);
 }
 
 inputEstados.addEventListener('focus', function(){
     content.style.display = 'flex';
 })
-inputEstados.addEventListener('blur', function(){
-    content.style.display = 'none';
+
+inputCidades.addEventListener('focus', function(){
+    contentCidades.style.display = 'flex';
 })
 
-function addHtml(item){
+function addHtml(item, localParaAdicionar){
     const div = document.createElement('div');
     div.innerHTML = item;
-    content.append(div);
+    localParaAdicionar.append(div);
     div.classList.add('div');
-    divEstado = document.getElementsByClassName('div');
-    
 }
 
 inputEstados.addEventListener('input', function() {
     const filtro = inputEstados.value.toLowerCase();
-    
-    content.innerHTML = ""; // Limpa o conteúdo anterior
+    console.log('inputou')
+    content.innerHTML = "";
     
     estados
         .filter((estado) => estado.nome.toLowerCase().includes(filtro))
-        .forEach((estado) => addHtml(estado.nome));
+        .forEach((estado) => addHtml(estado.nome, content));
 });
 
 
+
+
+function carregarJsonEstadosCidades(){
+    fetch('estados-cidades.json')
+        .then(response => response.json())
+        .then(data => {
+            // Use dataJsonN aqui
+            dataJson = data.estados;
+        })
+        .catch(error => {
+            console.error('Erro ao carregar o arquivo JSON:', error);
+        });
+}
+
+
+content.addEventListener('click', function(event){
+    
+    if (event.target.tagName === 'DIV') {
+        const estado = event.target.textContent;
+        console.log(estado);
+
+        inputEstados.value = estado;
+        content.style.display = 'none';
+
+
+        for (let i = 0; i < dataJson.length; i++) {
+            if(dataJson[i].nome == estado){
+                cidadesDisponiveis = dataJson[i].cidades;
+            }
+        }
+
+        while (contentCidades.firstChild) {
+            contentCidades.removeChild(contentCidades.firstChild);
+        }
+
+        //adicionar cidades disponiveis no html
+        for(let i = 0; i < cidadesDisponiveis.length; i++){
+            console.log(cidadesDisponiveis[i]);
+            addHtml(cidadesDisponiveis[i], contentCidades);
+        }
+        
+    }
+
+})
+
+inputCidades.addEventListener('input', function() {
+    const filtro = inputCidades.value.toLowerCase();
+    contentCidades.innerHTML = "";
+    
+    cidadesDisponiveis
+        .filter((cidade) => cidades.nome.toLowerCase().includes(filtro))
+        .forEach((cidade) => addHtml(estado.nome, contentCidades));
+});
 /*
 async function searchCity(cityName){
     try {
