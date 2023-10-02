@@ -214,6 +214,15 @@ main{
 }
 
 
+.load{
+    background-color: red !important;
+    background-image: none;
+}
+
+
+
+
+
 
 
 @media (max-width: 900px){
@@ -231,3 +240,4 @@ main{
         flex-shrink: 1;
     }
 }
+

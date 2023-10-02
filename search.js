@@ -1,3 +1,5 @@
+import { writeInfoInHtml } from './app.js';
+
 const inputEstados = document.getElementById('input-estados')
 const inputCidades = document.getElementById('input-cidades')
 const content = document.querySelector('.content');
@@ -5,6 +7,8 @@ const contentCidades = document.querySelector('.content-cidades');
 let divEstado, dataJson, cidadesDisponiveis;
 carregarJsonEstadosCidades();
 
+let cidadeParaBuscar = 'campo grande';
+let uf = 'MS'
 let estados = [
     {"nome": "Acre", "sigla": "AC"},
     {"nome": "Alagoas", "sigla": "AL"},
@@ -95,6 +99,7 @@ content.addEventListener('click', function(event){
 
         for (let i = 0; i < dataJson.length; i++) {
             if(dataJson[i].nome == estado){
+                uf = dataJson[i].sigla;
                 cidadesDisponiveis = dataJson[i].cidades;
             }
         }
@@ -105,7 +110,7 @@ content.addEventListener('click', function(event){
 
         //adicionar cidades disponiveis no html
         for(let i = 0; i < cidadesDisponiveis.length; i++){
-            console.log(cidadesDisponiveis[i]);
+            //console.log(cidadesDisponiveis[i]);
             addHtml(cidadesDisponiveis[i], contentCidades);
         }
         
@@ -113,86 +118,20 @@ content.addEventListener('click', function(event){
 
 })
 
-inputCidades.addEventListener('input', function() {
-    const filtro = inputCidades.value.toLowerCase();
-    contentCidades.innerHTML = "";
-    
-    cidadesDisponiveis
-        .filter((cidade) => cidades.nome.toLowerCase().includes(filtro))
-        .forEach((cidade) => addHtml(estado.nome, contentCidades));
-});
-/*
-async function searchCity(cityName){
-    try {
-        const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${cityName}&count=10&language=pt&format=json`, { timeout: 20000 });
-        const data = await response.json()
-        lista = data.results;
-        console.log(lista)
-        return {lista: lista};
-
-    } catch (error) {
-        console.error("Ocorreu um erro:", error);
-        console.error("Erro:", error.response);
+contentCidades.addEventListener('click', function(event){
+    if (event.target.tagName === 'DIV') {
+        const cidade = event.target.textContent;
+        console.log(cidade);
+        
+        inputCidades.value = cidade;
+        cidadeParaBuscar = cidade
+        contentCidades.style.display = 'none';
+        writeInfoInHtml();
     }
-
-}
-
-
-
-btnSearch.addEventListener('click', function(){
-    console.log(cityName)
 })
 
-document.body.addEventListener('keypress', function (event) {
-    const key = event.key;
-    console.log('pressionou')
-    if(key == 'Enter' && cityName != ''){
-        console.log('deu enter'); 
-
-        function ler(){
-            console.log('to no ler')
-            const { lista } = searchCity(cityName);
-            console.log(lista);
-            verificarEstado(estado, lista);
-        }
-        ler();
-    };
-});
-
-
-async function searchCity(cityName){
-    try {
-        const response = await fetch(`https://geocoding-api.open-meteo.com/v1/search?name=${cityName}&count=10&language=pt&format=json`, { timeout: 20000 });
-        const data = await response.json()
-        lista = data.results;
-        console.log(lista)
-        return {lista: lista};
-
-    } catch (error) {
-        console.error("Ocorreu um erro:", error);
-        console.error("Erro:", error.response);
-    }
-
-}
-
-function verificarEstado(estado, lista){
-    console.log(lista)
-    for (let i = 0; i < lista.length; i++) {
-        if(lista[i].admin1 == estado){
-            console.log('achei');
-        }
-    }   
-
-
-
-}
 
 
 
 
-function split(name){
-    let nameEsplitado = name.split(' ');
-    console.log(nameEsplitado)
-
-}
-*/
+export{ cidadeParaBuscar, uf };

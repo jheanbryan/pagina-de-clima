@@ -1,17 +1,18 @@
-// https://open-meteo.com
+import { cidadeParaBuscar, uf } from "./search.js";
 
 let API_KEY = "d63dfeee72b3e0fadcc8823978a770cd";
-let city_name = 'campo grande';
+let city_name = cidadeParaBuscar;
 
 let lat, lon, weather, weatherForecast, airQuality, data_hora, classification_uv;
+let day, dayWeek;
 
 const date = new Date();
 const hour = date.getHours()
 
 //obter a latitude e longitude da cidade
-async function getLatLon(){
+async function getLatLon(cidade){
     try {
-        const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${city_name}&limit=5&appid=${API_KEY}`);
+        const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${cidade}&limit=5&appid=${API_KEY}`);
         const data = await response.json()
         lat = data[0].lat;
         lon = data[0].lon;
@@ -79,7 +80,9 @@ function obterDiaDaSemana(dataString){
   }
 
 function classificarUV(indiceUV) {
-    if (indiceUV >= 0 && indiceUV <= 2) {
+    if (indiceUV == 0){
+        classificarUV = 'Zero'
+    } else if (indiceUV > 0 && indiceUV <= 2) {
         classification_uv = "Baixo";
     } else if (indiceUV >= 3 && indiceUV <= 5) {
         classification_uv = "Moderado";
@@ -93,12 +96,11 @@ function classificarUV(indiceUV) {
   }
 
 //função principal que pega os valores das funções para escrever no html
-async function writeInfoInHtml(){
-    const { lat, lon } = await getLatLon();
+export async function writeInfoInHtml(){
+    const { lat, lon } = await getLatLon(cidadeParaBuscar);
     const { weatherForecast } = await getWeatherForecast(lat, lon);
     const { airQuality } = await getAirQuality(lat, lon);
-
-
+    
     const temperature = document.getElementById('temperature-now');
     const city = document.getElementById('city');
     const minTemp = document.getElementById('min-temp');
@@ -111,7 +113,7 @@ async function writeInfoInHtml(){
     temperature.innerHTML = (weatherForecast.current_weather.temperature+1).toFixed(0);;
     minTemp.innerHTML = `${(weatherForecast.daily.temperature_2m_max[0]).toFixed(0)}°`;
     maxTemp.innerHTML = `${(weatherForecast.daily.temperature_2m_min[0]).toFixed(0)}°`;
-    city.innerHTML = city_name;
+    city.innerHTML = `${city_name}, ${uf}`;
     relativeHumidity.innerHTML = `${weatherForecast.hourly.relativehumidity_2m[hour]}%`;
     rainPercentage.innerHTML = `${weatherForecast.hourly.rain[hour]}%`;
     windSpeed_10m.innerHTML = `${weatherForecast.hourly.windspeed_10m[hour]} km/h`;
@@ -141,7 +143,6 @@ async function writeInfoInHtml(){
     const week = document.getElementsByClassName('day-week');
 
 
-    let day, dayWeek;
     for (let i = 0; i < 5; i++) {
         day = weatherForecast.daily.time[i];
         const dayWeek = obterDiaDaSemana(day); 
@@ -157,4 +158,4 @@ async function writeInfoInHtml(){
 
 }
 
-writeInfoInHtml();
+writeInfoInHtml()
