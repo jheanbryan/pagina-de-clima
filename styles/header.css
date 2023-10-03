@@ -15,6 +15,8 @@ form{
 }
 form > div{
     width: 100%;
+    position: relative;
+
 }
 input{
     color: black;
@@ -23,39 +25,21 @@ input{
     padding: 5px;
 }
 
-.content{
+.content, .content-cidades{
     flex-direction: column;
     position: absolute;
     z-index: 100;
-    width: 150px;
+    width: 95%;
     overflow-y: auto;
     max-height: 300px;
     display: none;
 }
-.content > div{
+.content > div, .content-cidades > div{
     background-color: #6D67D0;
     cursor: pointer;
     padding: 5px;
 }
-.content > div:hover{
-    background-color: white;
-    color: #6D67D0;
-}
-
-.content-cidades{
-    flex-direction: column;
-    position: absolute;
-    z-index: 100;
-    width: 150px;
-    overflow-y: auto;
-    max-height: 300px;
-}
-.content-cidades > div{
-    background-color: #6D67D0;
-    cursor: pointer;
-    padding: 5px;
-}
-.content-cidades > div:hover{
+.content > div:hover, .content-cidades > div:hover{
     background-color: white;
     color: #6D67D0;
 }
