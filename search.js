@@ -72,8 +72,6 @@ inputEstados.addEventListener('input', function() {
 });
 
 
-
-
 function carregarJsonEstadosCidades(){
     fetch('estados-cidades.json')
         .then(response => response.json())
@@ -129,9 +127,6 @@ contentCidades.addEventListener('click', function(event){
         writeInfoInHtml();
     }
 })
-
-
-
 
 
 export{ cidadeParaBuscar, uf };

@@ -81,7 +81,7 @@ function obterDiaDaSemana(dataString){
 
 function classificarUV(indiceUV) {
     if (indiceUV == 0){
-        classificarUV = 'Zero'
+        classification_uv = 'Zero'
     } else if (indiceUV > 0 && indiceUV <= 2) {
         classification_uv = "Baixo";
     } else if (indiceUV >= 3 && indiceUV <= 5) {
@@ -100,7 +100,6 @@ export async function writeInfoInHtml(){
     const { lat, lon } = await getLatLon(cidadeParaBuscar);
     const { weatherForecast } = await getWeatherForecast(lat, lon);
     const { airQuality } = await getAirQuality(lat, lon);
-    console.log(airQuality)
 
     const temperature = document.getElementById('temperature-now');
     const city = document.getElementById('city');
