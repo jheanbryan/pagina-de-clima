@@ -9,6 +9,8 @@ let day, dayWeek;
 const date = new Date();
 const hour = date.getHours()
 
+const containerLoading = document.getElementById('container-loading');
+
 //obter a latitude e longitude da cidade
 async function getLatLon(cidade){
     try {
@@ -156,6 +158,7 @@ export async function writeInfoInHtml(){
         minTemp.innerText = `${(weatherForecast.daily.temperature_2m_min[i]).toFixed(0)}°`;
     }
 
+    containerLoading.style.display = 'none';
 }
 
 writeInfoInHtml()
