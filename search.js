@@ -5,6 +5,7 @@ const inputCidades = document.getElementById('input-cidades')
 const content = document.querySelector('.content');
 const contentCidades = document.querySelector('.content-cidades');
 const containerLoading = document.getElementById('container-loading');
+const body = document.getElementById('body');
 
 let divEstado, dataJson, cidadesDisponiveis;
 carregarJsonEstadosCidades();
@@ -127,6 +128,7 @@ contentCidades.addEventListener('click', function(event){
         cidadeParaBuscar = cidade
         contentCidades.style.display = 'none';
         containerLoading.style.display = 'flex';
+        body.style.overflowY = 'hidden';
         writeInfoInHtml();
     }
 })

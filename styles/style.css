@@ -19,13 +19,15 @@ body{
     width: 100%;
     height: 100vh;
     background-image: url(../assets/Background.png);
+    background-position: center;
     background-repeat: no-repeat;
-    background-position: top center;
+    background-size: cover;
     display: flex;
     flex-direction: column;
     align-items: center;
     background-color: var(--bg-color);
     gap: 40px;
+    padding: 15px;
 }
 
 main{
@@ -48,6 +50,7 @@ main{
     flex-direction: column;
     padding: 20px;
     background-image: url(../assets/bg-Temperature-Now.png);
+    background-size: cover;
     flex: 1;
     border-radius: 10px;
     position: relative;
@@ -224,7 +227,6 @@ main{
 @media (max-width: 900px){
     body{
         height: auto;
-        padding: 15px;
         background-repeat: repeat;
     }
     main{
@@ -234,6 +236,10 @@ main{
     }
     .container-temperature-now{
         flex-shrink: 1;
+    }
+    body{
+        background-position: top;
+        background-size: cover
     }
 }
 

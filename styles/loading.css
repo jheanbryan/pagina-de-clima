@@ -13,7 +13,9 @@
     flex-direction: column;
     gap: 5px;
 }
-
+#body{
+    overflow-y: hidden;
+}
 .circle{
     width: 150px;
     height: 150px;

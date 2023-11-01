@@ -159,6 +159,7 @@ export async function writeInfoInHtml(){
     }
 
     containerLoading.style.display = 'none';
+    body.style.overflowY = 'scroll';
 }
 
 writeInfoInHtml()
