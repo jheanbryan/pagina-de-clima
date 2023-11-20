@@ -102,7 +102,8 @@ export async function writeInfoInHtml(){
     const { lat, lon } = await getLatLon(cidadeParaBuscar);
     const { weatherForecast } = await getWeatherForecast(lat, lon);
     const { airQuality } = await getAirQuality(lat, lon);
-
+    console.log(weatherForecast);
+    
     const temperature = document.getElementById('temperature-now');
     const city = document.getElementById('city');
     const minTemp = document.getElementById('min-temp');
