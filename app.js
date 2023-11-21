@@ -1,64 +1,74 @@
 import { cidadeParaBuscar, uf } from "./search.js";
 
-let API_KEY = "d63dfeee72b3e0fadcc8823978a770cd";
-let city_name = cidadeParaBuscar;
+const cache = {
+    API_KEY: 'd63dfeee72b3e0fadcc8823978a770cd',
+    local: {
+        cityName: cidadeParaBuscar,
+        date: new Date(),
+        hour: new Date().getHours()
+    },
+    clime: {
+        lat: null,
+        lon: null,
+        weatherForecast: null,
+        airQuality: null, 
+        classification_uv: null
+    },
+    images: {
+        sun: './assets/week/sun-week.png',
+        rain: './assets/week/rain-week.png',
+        sunAndCloud: './assets/week/sunWeather-week.png',
+        cloud: './assets/week/weather-week.png',
+        thunderStorm: './assets/week/thunderstorm-week.png'
 
-let lat, lon, weather, weatherForecast, airQuality, data_hora, classification_uv;
-let day, dayWeek;
-let img;
-
-const date = new Date();
-const hour = date.getHours()
-
-const containerLoading = document.getElementById('container-loading');
-
-const sun = './assets/week/sun-week.png';
-const rain = './assets/week/rain-week.png';
-const sunAndCloud = './assets/week/sunWeather-week.png';
-const cloud = './assets/week/weather-week.png';
-const thunderStorm = './assets/week/thunderstorm-week.png';
-
-const weatherCodes = {
-    0: sun,
-    1: sun,
-    2: sunAndCloud,
-    3: cloud,
-    45: cloud,
-    48: cloud,
-    51: rain,
-    53: rain,
-    55: rain,
-    56: rain,
-    57: rain,
-    61: rain,
-    63: rain,
-    65: rain,
-    66: rain,
-    67: rain,
-    71: rain,
-    73: rain,
-    75: rain,
-    77: cloud,
-    80: rain,
-    81: rain,
-    82: rain,
-    85: rain,
-    86: thunderStorm,
-    95: thunderStorm,
-    96: thunderStorm,
-    99: thunderStorm
+    },
 };
 
+const weatherCodes = {
+    0: cache.images.sun,
+    1: cache.images.sun,
+    2: cache.images.sunAndCloud,
+    3: cache.images.cloud,
+    45: cache.images.cloud,
+    48: cache.images.cloud,
+    51: cache.images.rain,
+    53: cache.images.rain,
+    55: cache.images.rain,
+    56: cache.images.rain,
+    57: cache.images.rain,
+    61: cache.images.rain,
+    63: cache.images.rain,
+    65: cache.images.rain,
+    66: cache.images.rain,
+    67: cache.images.rain,
+    71: cache.images.rain,
+    73: cache.images.rain,
+    75: cache.images.rain,
+    77: cache.images.cloud,
+    80: cache.images.rain,
+    81: cache.images.rain,
+    82: cache.images.rain,
+    85: cache.images.rain,
+    86: cache.images.thunderStorm,
+    95: cache.images.thunderStorm,
+    96: cache.images.thunderStorm,
+    99: cache.images.thunderStorm
+};
+
+let day, dayWeek;
+
+
+const containerLoading = document.getElementById('container-loading');
 
 //obter a latitude e longitude da cidade
 async function getLatLon(cidade){
     try {
-        const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${cidade}&limit=5&appid=${API_KEY}`);
+        const response = await fetch(`https://api.openweathermap.org/geo/1.0/direct?q=${cidade}&limit=5&appid=${cache.API_KEY}`);
         const data = await response.json()
-        lat = data[0].lat;
-        lon = data[0].lon;
-        city_name = data[0].name;
-        return { lat: lat.toFixed(4), lon: lon.toFixed(4) };
+        cache.clime.lat = data[0].lat;
+        cache.clime.lon = data[0].lon;
+        cache.local.cityName = data[0].name;
+        return { lat: cache.clime.lat.toFixed(4), lon: cache.clime.lon.toFixed(4) };
 
     } catch (error) {
         console.error("Ocorreu um erro:", error);
@@ -71,8 +81,8 @@ async function getWeatherForecast(lat, lon){
     try {
         const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=relativehumidity_2m,rain,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&current_weather=true&timezone=auto`, { timeout: 20000 });
         const data = await response.json()
-        weatherForecast = data;
-        return {weatherForecast: weatherForecast};
+        cache.clime.weatherForecast = data;
+        return {weatherForecast: cache.clime.weatherForecast};
 
     } catch (error) {
         console.error("Ocorreu um erro:", error);
@@ -84,8 +94,8 @@ async function getAirQuality(lat, lon){
     try {
         const response = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&hourly=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone,uv_index`, { timeout: 20000 });
         const data = await response.json()
-        airQuality = data;
-        return {airQuality: airQuality};
+        cache.clime.airQuality = data;
+        return {airQuality: cache.clime.airQuality};
 
     } catch (error) {
         console.error("Ocorreu um erro:", error);
@@ -93,19 +103,6 @@ async function getAirQuality(lat, lon){
     }
 }
 
-function acharHora(lista_data_hora){
-    for (let i = 0; i < Object.keys(lista_data_hora).length; i++) {
-        var partes = lista_data_hora[i].split(/[-T:]/);
-        var hora = parseInt(partes[3]);
-
-        if (hora === hour) {
-            pos = i;
-            i = Object.keys(lista_data_hora).length;
-
-        } else {
-        }
-    }
-}
 
 function obterDiaDaSemana(dataString){
     const diasDaSemana = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
@@ -122,30 +119,27 @@ function obterDiaDaSemana(dataString){
 
 function classificarUV(indiceUV){
     if (indiceUV == 0){
-        classification_uv = 'Zero'
+        cache.clime.classification_uv = 'Zero'
     } else if (indiceUV > 0 && indiceUV <= 2) {
-        classification_uv = "Baixo";
+        cache.clime.classification_uv = "Baixo";
     } else if (indiceUV >= 3 && indiceUV <= 5) {
-        classification_uv = "Moderado";
+        cache.clime.classification_uv = "Moderado";
     } else if (indiceUV >= 6 && indiceUV <= 7) {
-        classification_uv = "Alto";
+        cache.clime.classification_uv = "Alto";
     } else if (indiceUV >= 8 && indiceUV <= 10) {
-        classification_uv = "Muito Alto";
+        cache.clime.classification_uv = "Muito Alto";
     } else {
-        classification_uv = "Extremo";
+        cache.clime.classification_uv = "Extremo";
     }
 }
 
-function generateIconClimateDay(weatherCode){
-    return img = weatherCodes.weatherCode
-}
 
 //função principal que pega os valores das funções para escrever no html
 export async function writeInfoInHtml(){
     const { lat, lon } = await getLatLon(cidadeParaBuscar);
     const { weatherForecast } = await getWeatherForecast(lat, lon);
     const { airQuality } = await getAirQuality(lat, lon);
-    console.log(weatherForecast);
+    //console.log(weatherForecast);
     
     const temperature = document.getElementById('temperature-now');
     const city = document.getElementById('city');
@@ -159,10 +153,9 @@ export async function writeInfoInHtml(){
     temperature.innerHTML = (weatherForecast.current_weather.temperature+1).toFixed(0);;
     minTemp.innerHTML = `${(weatherForecast.daily.temperature_2m_max[0]).toFixed(0)}°`;
     maxTemp.innerHTML = `${(weatherForecast.daily.temperature_2m_min[0]).toFixed(0)}°`;
-    city.innerHTML = `${city_name}, ${uf}`;
-    relativeHumidity.innerHTML = `${weatherForecast.hourly.relativehumidity_2m[hour]}%`;
-    rainPercentage.innerHTML = `${weatherForecast.hourly.rain[hour]}%`;
-    windSpeed_10m.innerHTML = `${weatherForecast.hourly.windspeed_10m[hour]} km/h`;
+    city.innerHTML = `${cache.local.cityName}, ${uf}`;
+    relativeHumidity.innerHTML = `${weatherForecast.hourly.relativehumidity_2m[cache.local.hour]}%`;
+    rainPercentage.innerHTML = `${weatherForecast.hourly.rain[cache.local.hour]}%`;
 
     //section2 other info
     const particulateMatter2Qtd = document.getElementById('particulate-matter2-qtd');
@@ -174,16 +167,16 @@ export async function writeInfoInHtml(){
     const uvIndex = document.getElementById('uv-index');
     const classificationUv = document.getElementById('classification_uv');
 
-    particulateMatter2Qtd.innerHTML = airQuality.hourly.pm2_5[hour];
-    particulateMatter10Qtd.innerHTML = airQuality.hourly.pm10[hour];
-    sulphurDioxide.innerHTML = airQuality.hourly.sulphur_dioxide[hour];
-    nitrogenDioxide.innerHTML = airQuality.hourly.nitrogen_dioxide[hour];
-    ozone.innerHTML = airQuality.hourly.ozone[hour];
-    carbonMonoxide.innerHTML = airQuality.hourly.carbon_monoxide[hour];
-    uvIndex.innerHTML = airQuality.hourly.uv_index[hour];
+    particulateMatter2Qtd.innerHTML = airQuality.hourly.pm2_5[cache.local.hour];
+    particulateMatter10Qtd.innerHTML = airQuality.hourly.pm10[cache.local.hour];
+    sulphurDioxide.innerHTML = airQuality.hourly.sulphur_dioxide[cache.local.hour];
+    nitrogenDioxide.innerHTML = airQuality.hourly.nitrogen_dioxide[cache.local.hour];
+    ozone.innerHTML = airQuality.hourly.ozone[cache.local.hour];
+    carbonMonoxide.innerHTML = airQuality.hourly.carbon_monoxide[cache.local.hour];
+    uvIndex.innerHTML = airQuality.hourly.uv_index[cache.local.hour];
 
-    classificarUV(airQuality.hourly.uv_index[hour]);
-    classificationUv.innerHTML = classification_uv;
+    classificarUV(airQuality.hourly.uv_index[cache.local.hour]);
+    classificationUv.innerHTML = cache.clime.classification_uv;
 
 
     const week = document.getElementsByClassName('day-week');
@@ -191,7 +184,7 @@ export async function writeInfoInHtml(){
 
     for (let i = 0; i < 5; i++) {
         let code = weatherForecast.daily.weather_code[i];
-        img = weatherCodes[`${code}`];
+        let img = weatherCodes[`${code}`];
 
         day = weatherForecast.daily.time[i];
         const dayWeek = obterDiaDaSemana(day); 
