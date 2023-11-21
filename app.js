@@ -5,11 +5,50 @@ let city_name = cidadeParaBuscar;
 
 let lat, lon, weather, weatherForecast, airQuality, data_hora, classification_uv;
 let day, dayWeek;
+let img;
 
 const date = new Date();
 const hour = date.getHours()
 
 const containerLoading = document.getElementById('container-loading');
+
+const sun = './assets/week/sun-week.png';
+const rain = './assets/week/rain-week.png';
+const sunAndCloud = './assets/week/sunWeather-week.png';
+const cloud = './assets/week/weather-week.png';
+const thunderStorm = './assets/week/thunderstorm-week.png';
+
+const weatherCodes = {
+    0: sun,
+    1: sun,
+    2: sunAndCloud,
+    3: cloud,
+    45: cloud,
+    48: cloud,
+    51: rain,
+    53: rain,
+    55: rain,
+    56: rain,
+    57: rain,
+    61: rain,
+    63: rain,
+    65: rain,
+    66: rain,
+    67: rain,
+    71: rain,
+    73: rain,
+    75: rain,
+    77: cloud,
+    80: rain,
+    81: rain,
+    82: rain,
+    85: rain,
+    86: thunderStorm,
+    95: thunderStorm,
+    96: thunderStorm,
+    99: thunderStorm
+};
+
 
 //obter a latitude e longitude da cidade
 async function getLatLon(cidade){
@@ -30,7 +69,7 @@ async function getLatLon(cidade){
 
 async function getWeatherForecast(lat, lon){
     try {
-        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=relativehumidity_2m,rain,windspeed_10m&daily=temperature_2m_max,temperature_2m_min&current_weather=true&timezone=auto`, { timeout: 20000 });
+        const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=relativehumidity_2m,rain,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&current_weather=true&timezone=auto`, { timeout: 20000 });
         const data = await response.json()
         weatherForecast = data;
         return {weatherForecast: weatherForecast};
@@ -79,9 +118,9 @@ function obterDiaDaSemana(dataString){
   
     dayWeek = diasDaSemana[diaSemana];
     return dayWeek;
-  }
+}
 
-function classificarUV(indiceUV) {
+function classificarUV(indiceUV){
     if (indiceUV == 0){
         classification_uv = 'Zero'
     } else if (indiceUV > 0 && indiceUV <= 2) {
@@ -95,7 +134,11 @@ function classificarUV(indiceUV) {
     } else {
         classification_uv = "Extremo";
     }
-  }
+}
+
+function generateIconClimateDay(weatherCode){
+    return img = weatherCodes.weatherCode
+}
 
 //função principal que pega os valores das funções para escrever no html
 export async function writeInfoInHtml(){
@@ -147,6 +190,9 @@ export async function writeInfoInHtml(){
 
 
     for (let i = 0; i < 5; i++) {
+        let code = weatherForecast.daily.weather_code[i];
+        img = weatherCodes[`${code}`];
+
         day = weatherForecast.daily.time[i];
         const dayWeek = obterDiaDaSemana(day); 
         const spanElement = week[i].querySelector('span');
@@ -154,6 +200,8 @@ export async function writeInfoInHtml(){
 
         let maxTemp = document.getElementById(`max-temp-day${i+1}`);
         let minTemp = document.getElementById(`min-temp-day${i+1}`);
+        let newImg = document.getElementById(`img${i+1}`);
+        newImg.src = img;
 
         maxTemp.innerText = `${(weatherForecast.daily.temperature_2m_max[i]).toFixed(0)}°`;
         minTemp.innerText = `${(weatherForecast.daily.temperature_2m_min[i]).toFixed(0)}°`;
