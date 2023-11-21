@@ -1,17 +1,29 @@
 import { writeInfoInHtml } from './app.js';
 
-const inputEstados = document.getElementById('input-estados')
-const inputCidades = document.getElementById('input-cidades')
-const content = document.querySelector('.content');
-const contentCidades = document.querySelector('.content-cidades');
-const containerLoading = document.getElementById('container-loading');
-const body = document.getElementById('body');
+const state = {
+    domElements: {
+        inputEstados: document.getElementById('input-estados'),
+        inputCidades: document.getElementById('input-cidades'),
+        content:  document.querySelector('.content'),
+        contentCidades: document.querySelector('.content-cidades'),
+        containerLoading: document.getElementById('container-loading'),
+        body: document.getElementById('body')
+    },
+    local: {
+        cityToSearch: 'aquidauana',
+        uf: 'MS',
+        estado: null, 
+        cidade: null
+    },
+    data: {
+        dataJson: null,
+        cidadesDisponiveis: null,
+    }
 
-let divEstado, dataJson, cidadesDisponiveis;
+}
+
 carregarJsonEstadosCidades();
 
-let cidadeParaBuscar = 'aquidauana';
-let uf = 'MS'
 let estados = [
     {"nome": "Acre", "sigla": "AC"},
     {"nome": "Alagoas", "sigla": "AL"},
@@ -42,19 +54,20 @@ let estados = [
     {"nome": "Tocantins", "sigla": "TO"}
 
 ];
-let estado, cidade;
+
+
 for (let i = 0; i < estados.length; i++) {
-    estado = estados[i].nome;
+    state.local.estado = estados[i].nome;
     //console.log(estado);
-    addHtml(estado, content);
+    addHtml(state.local.estado, state.domElements.content);
 }
 
-inputEstados.addEventListener('focus', function(){
-    content.style.display = 'flex';
+state.domElements.inputEstados.addEventListener('focus', function(){
+    state.domElements.content.style.display = 'flex';
 })
 
-inputCidades.addEventListener('focus', function(){
-    contentCidades.style.display = 'flex';
+state.domElements.inputCidades.addEventListener('focus', function(){
+    state.domElements.contentCidades.style.display = 'flex';
 })
 
 function addHtml(item, localParaAdicionar){
@@ -64,10 +77,10 @@ function addHtml(item, localParaAdicionar){
     div.classList.add('div');
 }
 
-inputEstados.addEventListener('input', function() {
-    const filtro = inputEstados.value.toLowerCase();
+state.domElements.inputEstados.addEventListener('input', function() {
+    const filtro = state.domElements.inputEstados.value.toLowerCase();
     console.log('inputou')
-    content.innerHTML = "";
+    state.domElements.content.innerHTML = "";
     
     estados
         .filter((estado) => estado.nome.toLowerCase().includes(filtro))
@@ -80,7 +93,7 @@ function carregarJsonEstadosCidades(){
         .then(response => response.json())
         .then(data => {
             // Use dataJsonN aqui
-            dataJson = data.estados;
+            state.data.dataJson = data.estados;
         })
         .catch(error => {
             console.error('Erro ao carregar o arquivo JSON:', error);
@@ -88,50 +101,50 @@ function carregarJsonEstadosCidades(){
 }
 
 
-content.addEventListener('click', function(event){
+state.domElements.content.addEventListener('click', function(event){
     
     if (event.target.tagName === 'DIV') {
         const estado = event.target.textContent;
         console.log(estado);
 
-        inputEstados.value = estado;
-        content.style.display = 'none';
+        state.domElements.inputEstados.value = estado;
+        state.domElements.content.style.display = 'none';
 
 
-        for (let i = 0; i < dataJson.length; i++) {
-            if(dataJson[i].nome == estado){
-                uf = dataJson[i].sigla;
-                cidadesDisponiveis = dataJson[i].cidades;
+        for (let i = 0; i < state.data.dataJson.length; i++) {
+            if(state.data.dataJson[i].nome == estado){
+                state.local.uf = state.data.dataJson[i].sigla;
+                state.data.cidadesDisponiveis = state.data.dataJson[i].cidades;
             }
         }
 
         while (contentCidades.firstChild) {
-            contentCidades.removeChild(contentCidades.firstChild);
+            state.domElements.contentCidades.removeChild(contentCidades.firstChild);
         }
 
         //adicionar cidades disponiveis no html
-        for(let i = 0; i < cidadesDisponiveis.length; i++){
+        for(let i = 0; i < state.data.cidadesDisponiveis.length; i++){
             //console.log(cidadesDisponiveis[i]);
-            addHtml(cidadesDisponiveis[i], contentCidades);
+            addHtml(state.data.cidadesDisponiveis[i], state.domElements.contentCidades);
         }
         
     }
 
 })
 
-contentCidades.addEventListener('click', function(event){
+state.domElements.contentCidades.addEventListener('click', function(event){
     if (event.target.tagName === 'DIV') {
         const cidade = event.target.textContent;
         console.log(cidade);
         
-        inputCidades.value = cidade;
-        cidadeParaBuscar = cidade
-        contentCidades.style.display = 'none';
-        containerLoading.style.display = 'flex';
-        body.style.overflowY = 'hidden';
+        state.domElements.inputCidades.value = cidade;
+        state.local.cityToSearch = cidade
+        state.domElements.contentCidades.style.display = 'none';
+        state.domElements.containerLoading.style.display = 'flex';
+        state.domElements.body.style.overflowY = 'hidden';
         writeInfoInHtml();
     }
 })
 
 
-export{ cidadeParaBuscar, uf };
+export{ state };

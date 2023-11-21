@@ -1,9 +1,9 @@
-import { cidadeParaBuscar, uf } from "./search.js";
+import { state } from "./search.js";
 
 const cache = {
     API_KEY: 'd63dfeee72b3e0fadcc8823978a770cd',
     local: {
-        cityName: cidadeParaBuscar,
+        cityName: state.local.cityToSearch,
         date: new Date(),
         hour: new Date().getHours()
     },
@@ -55,10 +55,6 @@ const weatherCodes = {
     99: cache.images.thunderStorm
 };
 
-let day, dayWeek;
-
-
-const containerLoading = document.getElementById('container-loading');
 
 //obter a latitude e longitude da cidade
 async function getLatLon(cidade){
@@ -77,6 +73,7 @@ async function getLatLon(cidade){
 
 }
 
+//obter o clima com a latitude e longitude pega na função anterior
 async function getWeatherForecast(lat, lon){
     try {
         const response = await fetch(`https://api.open-meteo.com/v1/forecast?latitude=${lat}&longitude=${lon}&hourly=relativehumidity_2m,rain,windspeed_10m&daily=temperature_2m_max,temperature_2m_min,weather_code&current_weather=true&timezone=auto`, { timeout: 20000 });
@@ -90,6 +87,7 @@ async function getWeatherForecast(lat, lon){
     }
 }
 
+//obter qualidade do ar
 async function getAirQuality(lat, lon){
     try {
         const response = await fetch(`https://air-quality-api.open-meteo.com/v1/air-quality?latitude=${lat}&longitude=${lon}&hourly=pm10,pm2_5,carbon_monoxide,nitrogen_dioxide,sulphur_dioxide,ozone,uv_index`, { timeout: 20000 });
@@ -103,8 +101,9 @@ async function getAirQuality(lat, lon){
     }
 }
 
-
-function obterDiaDaSemana(dataString){
+//obter o dia da semana pelo dia do mes
+function getDayforWeek(dataString){
+    //"2023-11-20"
     const diasDaSemana = ["Domingo", "Segunda-feira", "Terça-feira", "Quarta-feira", "Quinta-feira", "Sexta-feira", "Sábado"];
     const partesDaData = dataString.split('-');
     const ano = parseInt(partesDaData[0]);
@@ -113,11 +112,11 @@ function obterDiaDaSemana(dataString){
     const data = new Date(ano, mes, dia);
     const diaSemana = data.getDay();
   
-    dayWeek = diasDaSemana[diaSemana];
-    return dayWeek;
+   return diasDaSemana[diaSemana];
 }
 
-function classificarUV(indiceUV){
+//classificar o indice de uv
+function classifyUv(indiceUV){
     if (indiceUV == 0){
         cache.clime.classification_uv = 'Zero'
     } else if (indiceUV > 0 && indiceUV <= 2) {
@@ -136,7 +135,7 @@ function classificarUV(indiceUV){
 
 //função principal que pega os valores das funções para escrever no html
 export async function writeInfoInHtml(){
-    const { lat, lon } = await getLatLon(cidadeParaBuscar);
+    const { lat, lon } = await getLatLon(state.local.cityToSearch); //botar so a cidade diretooooooooooooooooooooooooooooooooooooooo
     const { weatherForecast } = await getWeatherForecast(lat, lon);
     const { airQuality } = await getAirQuality(lat, lon);
     //console.log(weatherForecast);
@@ -153,7 +152,7 @@ export async function writeInfoInHtml(){
     temperature.innerHTML = (weatherForecast.current_weather.temperature+1).toFixed(0);;
     minTemp.innerHTML = `${(weatherForecast.daily.temperature_2m_max[0]).toFixed(0)}°`;
     maxTemp.innerHTML = `${(weatherForecast.daily.temperature_2m_min[0]).toFixed(0)}°`;
-    city.innerHTML = `${cache.local.cityName}, ${uf}`;
+    city.innerHTML = `${cache.local.cityName}, ${state.local.uf}`;
     relativeHumidity.innerHTML = `${weatherForecast.hourly.relativehumidity_2m[cache.local.hour]}%`;
     rainPercentage.innerHTML = `${weatherForecast.hourly.rain[cache.local.hour]}%`;
 
@@ -175,19 +174,17 @@ export async function writeInfoInHtml(){
     carbonMonoxide.innerHTML = airQuality.hourly.carbon_monoxide[cache.local.hour];
     uvIndex.innerHTML = airQuality.hourly.uv_index[cache.local.hour];
 
-    classificarUV(airQuality.hourly.uv_index[cache.local.hour]);
+    classifyUv(airQuality.hourly.uv_index[cache.local.hour]);
     classificationUv.innerHTML = cache.clime.classification_uv;
 
-
     const week = document.getElementsByClassName('day-week');
-
 
     for (let i = 0; i < 5; i++) {
         let code = weatherForecast.daily.weather_code[i];
         let img = weatherCodes[`${code}`];
 
-        day = weatherForecast.daily.time[i];
-        const dayWeek = obterDiaDaSemana(day); 
+        let day = weatherForecast.daily.time[i];
+        const dayWeek = getDayforWeek(day); 
         const spanElement = week[i].querySelector('span');
         spanElement.innerHTML = dayWeek;
 
@@ -200,6 +197,7 @@ export async function writeInfoInHtml(){
         minTemp.innerText = `${(weatherForecast.daily.temperature_2m_min[i]).toFixed(0)}°`;
     }
 
+    const containerLoading = document.getElementById('container-loading');
     containerLoading.style.display = 'none';
     body.style.overflowY = 'scroll';
 }
