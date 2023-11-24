@@ -118,8 +118,8 @@ state.domElements.content.addEventListener('click', function(event){
             }
         }
 
-        while (contentCidades.firstChild) {
-            state.domElements.contentCidades.removeChild(contentCidades.firstChild);
+        while (state.domElements.contentCidades.firstChild) {
+            state.domElements.contentCidades.removeChild(state.domElements.contentCidades.firstChild);
         }
 
         //adicionar cidades disponiveis no html
