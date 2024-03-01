@@ -204,6 +204,9 @@ export async function writeInfoInHtml(){
 
     
     insertDateInHtml();
+    setInterval(() => {
+        insertDateInHtml();
+    }, 1000);
 }
 
 
@@ -217,16 +220,13 @@ function insertDateInHtml() {
     const hour = date.getHours();
     const minutes = date.getMinutes();
 
-    // 29/02/2024 - 21:48
-
-    console.log(day.toString().length == 1)
     if (day.toString().length == 1) {
         day = `0${day}`;
     }
     if (month.toString.length == 1) {
         month = `0${month}`;
     }
-
+ 
     spanElement.innerText = `${day}/${month}/${year} - ${hour}:${minutes}`;
 }
 
