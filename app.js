@@ -54,6 +54,7 @@ const weatherCodes = {
     96: cache.images.thunderStorm,
     99: cache.images.thunderStorm
 };
+const spanElement = document.querySelector('.hour');
 
 
 //obter a latitude e longitude da cidade
@@ -200,6 +201,33 @@ export async function writeInfoInHtml(){
     const containerLoading = document.getElementById('container-loading');
     containerLoading.style.display = 'none';
     body.style.overflowY = 'scroll';
+
+    
+    insertDateInHtml();
+}
+
+
+//função para inserir a data e hora
+function insertDateInHtml() {
+    const date = new Date();
+    const year = date.getFullYear();
+    let month = date.getMonth();
+    let day = date.getDay();
+
+    const hour = date.getHours();
+    const minutes = date.getMinutes();
+
+    // 29/02/2024 - 21:48
+
+    console.log(day.toString().length == 1)
+    if (day.toString().length == 1) {
+        day = `0${day}`;
+    }
+    if (month.toString.length == 1) {
+        month = `0${month}`;
+    }
+
+    spanElement.innerText = `${day}/${month}/${year} - ${hour}:${minutes}`;
 }
 
 writeInfoInHtml()
